@@ -15,6 +15,14 @@ I chose: **Time-Based**: Employ timers and events for animation.
 Building upon our group project, I learned to use **p5.js's millis() function** to achieve my desired effect.
 Source👉: **https://p5js.org/reference/p5/millis/**
 
+
+
+## Individual Work Iteration-02
+### Artworks Instructions: 
+In this iteration, the animation adds **varied breathing speeds** to **each circular pattern**. Simply load the webpage, and users will see each circle moving at its own pace, adding a sense of depth and making the originally synchronous breathing effect more dynamic.
+
+The animation runs automatically without user interaction. Each time the page is refreshed, the size, position, and speed of all circles will randomly change, creating a unique experience.
+
 ### Acknowledgement
 *I acknowledge the use of the AI tools ChatGPT and Grammarly for assisting with translating texts, grammar, and written expression in this assignment.* 
 

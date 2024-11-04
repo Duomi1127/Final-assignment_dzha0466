@@ -580,51 +580,51 @@ function windowResized() {
 
 
 // Individual Part: Time-Based: Employ timers and events for animation
-// This part creates a breathing effect using time-based automatic animation
-
-// Initialize variables needed for the breathing effect
-let breatheScale = 0;  // Control the scaling value for the breathing effect
-let startTime;        // Record the start time of the animation
-
-// To avoid affecting the group work's effect
-// I redefined the original setup function here
-// and added the initialization of animation time at the end
+// Iteration 2: Adding varied breathing speeds based on the first version
+let breatheScale = 0;
+let startTime;
 
 function setup() {
- createCanvas(windowWidth, windowHeight);
- patternManager = new PatternManager();
- patternManager.createPatterns();
- 
- // Initialize animation time
-// Source: using p5.js's millis() function to track time
-// https://p5js.org/reference/p5/millis/
- startTime = millis();
+  createCanvas(windowWidth, windowHeight);
+  patternManager = new PatternManager();
+  patternManager.createPatterns();
+  startTime = millis();
+  
+  // Assign a random speed value to each pattern
+  patternManager.patterns.forEach((pattern, index) => {
+    pattern.speedFactor = random(0.5, 2); 
+    // The speed randomly varies between 0.5 and 2 times,
+    //making the animation more layered than the first version
+  });
 }
 
-// Similarly, make a few adjustments to the original draw function
 function draw() {
- background(232,198,198,255);
- 
- // Time-based animation
- let time = (millis() - startTime) / 1000; // Convert to seconds
- breatheScale = sin(time) * 0.5; //The sin() function creates a smooth scaling effect between -1 and 1
- // The breathing amplitude can be adjusted by changing "0.5"
-// For example, 0.1 will make it weaker
-// The value in sin(time * some_value) can control the speed of breathing
-// For example, sin(time * 5) * 0.5 will be faster than sin(time * 0.1) * 0.5
- 
- // Apply the breathing effect to each pattern
- patternManager.patterns.forEach(pattern => {
-   // Original scaling value
-   let originalScale = pattern.scale;
-   // Apply the new scaling value for the breathing effect
-   pattern.scale = originalScale * (1 + breatheScale);
-   // Now start drawing the pattern
-   pattern.draw();
-   // Restore the original scaling value
-   pattern.scale = originalScale;
- });
+  background(232,198,198,255);
+  let time = (millis() - startTime) / 1000;
+  
+  patternManager.patterns.forEach(pattern => {
+    let originalScale = pattern.scale;
+    breatheScale = sin(time * pattern.speedFactor) * 0.5;
+    pattern.scale = originalScale * (1 + breatheScale);
+    pattern.draw();
+    pattern.scale = originalScale;
+  });
 }
+
+
+
+// Window size change processing
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  patternManager.createPatterns();
+  startTime = millis(); // Reset the animation start time
+  // Reassign a speed value to each pattern
+  patternManager.patterns.forEach((pattern, index) => {
+    pattern.speedFactor = random(0.5, 2); // Speed ranges between 0.5 and 2 times
+  });
+}
+//The above ensures that each time the window is resized and refreshed, 
+//the circles can reset and maintain the random speeds I set above.
 
 //Acknowledgement
 //I acknowledge the use of the AI tools ChatGPT and Grammarly for assisting with translating texts,
