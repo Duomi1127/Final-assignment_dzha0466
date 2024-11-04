@@ -580,51 +580,81 @@ function windowResized() {
 
 
 // Individual Part: Time-Based: Employ timers and events for animation
-// Iteration 2: Adding varied breathing speeds based on the first version
-let breatheScale = 0;
-let startTime;
+// Enhanced from the second iteration by adding user interaction:
+// Mouse movement controls the breathing speed of the circles.
+// Each circle maintains different breathing speeds even when the mouse is still.
+
+let breatheScale = 0;      // Control the scaling value for the breathing effect
+let startTime;             // Record the start time of the animation
+let globalSpeedMultiplier = 1;  // Control the overall speed value
+
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  patternManager = new PatternManager();
-  patternManager.createPatterns();
-  startTime = millis();
-  
-  // Assign a random speed value to each pattern
-  patternManager.patterns.forEach((pattern, index) => {
-    pattern.speedFactor = random(0.5, 2); 
-    // The speed randomly varies between 0.5 and 2 times,
-    //making the animation more layered than the first version
-  });
+ createCanvas(windowWidth, windowHeight);
+ patternManager = new PatternManager(); //Create new settings for pattern management
+ patternManager.createPatterns();
+ initializeAnimationParameters();
+}
+
+
+//Initialize animation
+function initializeAnimationParameters() {
+ startTime = millis();
+ 
+ patternManager.patterns.forEach((pattern, index) => {
+   pattern.speedFactor = random(0.5, 2);    // Randomly set the breathing speed for each pattern
+   pattern.phaseOffset = random(TWO_PI);    // Randomly set offset values to desynchronize each pattern's breathing
+ });
 }
 
 function draw() {
-  background(232,198,198,255);
-  let time = (millis() - startTime) / 1000;
-  
-  patternManager.patterns.forEach(pattern => {
-    let originalScale = pattern.scale;
-    breatheScale = sin(time * pattern.speedFactor) * 0.5;
-    pattern.scale = originalScale * (1 + breatheScale);
-    pattern.draw();
-    pattern.scale = originalScale;
-  });
+ background(232,198,198,255);
+ 
+ let time = (millis() - startTime) / 1000;// Calculate the duration of the animation
+ 
+ let distToCenter = dist(mouseX, mouseY, width/2, height/2);//Calculate distance, source: https://p5js.org/reference/p5/dist/
+ // Calculate the distance between the mouse and the center of the canvas to control the breathing speed
+ //When the mouse is at the center, speed is 2
+ //When the mouse is at the edge, speed is 0.5, within this range
+ globalSpeedMultiplier = map(distToCenter, 0, width/2, 0.5, 2, true);//distToCenter represents the distance from the mouse to the center of the canvas, source:https://p5js.org/reference/p5/map/
+ 
+ patternManager.patterns.forEach((pattern, index) => {
+  //Restore the original size of the pattern
+   let originalScale = pattern.scale;
+   
+
+   // Calculate the breathing effect
+   //  The sin() function generates values between -1 and 1, multiplied by 0.5 to control the breathing amplitude
+   // pattern.speedFactor and globalSpeedMultiplier together control the breathing speed
+   // pattern.phaseOffset staggers the breathing cycle of each pattern
+   let breatheAmount = sin(time * pattern.speedFactor * globalSpeedMultiplier + pattern.phaseOffset) * 0.5;
+   // Calculate the distance from the pattern to the mouse to adjust breathing speed, source: https://p5js.org/reference/p5/dist/
+   let distToMouse = dist(mouseX, mouseY, pattern.x, pattern.y);
+   //The closer the distance, the greater the influence
+   let distanceInfluence = map(distToMouse, 0, 300, 1, 0.5, true);// disToMouse represents the distance to the mouse, source: https://p5js.org/reference/p5/map/
+   
+   //Calculate the scaling effect: original size * (1 + breathing effect * distance influence)
+   pattern.scale = originalScale * (1 + breatheAmount * distanceInfluence);
+   pattern.draw();
+   pattern.scale = originalScale;
+ });
+ 
+ //  Display instructions for the user
+ fill(0);
+ noStroke();
+ textSize(16);
+ text('Move mouse anywhere: Further from center = Faster animation', 10, 30);
 }
 
 
-
-// Window size change processing
+//Adjust the canvas to fit window resizing
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  patternManager.createPatterns();
-  startTime = millis(); // Reset the animation start time
-  // Reassign a speed value to each pattern
-  patternManager.patterns.forEach((pattern, index) => {
-    pattern.speedFactor = random(0.5, 2); // Speed ranges between 0.5 and 2 times
-  });
+ resizeCanvas(windowWidth, windowHeight);
+ patternManager.createPatterns();
+ initializeAnimationParameters();
 }
-//The above ensures that each time the window is resized and refreshed, 
-//the circles can reset and maintain the random speeds I set above.
+
+
 
 //Acknowledgement
 //I acknowledge the use of the AI tools ChatGPT and Grammarly for assisting with translating texts,

@@ -23,6 +23,19 @@ In this iteration, the animation adds **varied breathing speeds** to **each circ
 
 The animation runs automatically without user interaction. Each time the page is refreshed, the size, position, and speed of all circles will randomly change, creating a unique experience.
 
+## Individual Work Iteration-03
+### Artworks Instructions:
+In this iteration, the animation responds to the **mouse position** on the canvas, further enhancing the interaction between the user and the artwork. Now, each circular pattern's breathing speed dynamically adjusts based on the distance between the mouse and the center of the canvas.
+
+1. **Closer to the center**: The breathing speed of each circle increases, creating a faster rhythm.
+2. **Closer to the edges**: The breathing speed slows down, resulting in a more calm and relaxed effect.
+
+Simply move the mouse across the canvas to experience these variations in breathing speeds. The animation remains automatically generated, and each time the page is refreshed, the arrangement, size, and speed of the circles are randomly adjusted, providing a unique experience for the user.
+
+Learning resources-01👉: **https://p5js.org/reference/p5/map/**
+Learning resources-02👉: **https://p5js.org/reference/p5/dist/**
+（Also included in the comments of the sketch.）
+
 ### Acknowledgement
 *I acknowledge the use of the AI tools ChatGPT and Grammarly for assisting with translating texts, grammar, and written expression in this assignment.* 
 
